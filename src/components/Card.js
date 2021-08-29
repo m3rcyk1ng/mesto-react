@@ -7,8 +7,8 @@ function Card({card, onCardClick}) {
 
     return (
         <article className="element">
-            <img className="element__photo" src={card.link} alt={card.name} onClick={handleClick}/>
-            <div className="element__overlay"></div>
+            <img className="element__photo" src={card.link} alt={card.name}/>
+            <div className="element__overlay" onClick={handleClick}></div>
             <button className="element__delete-icon" type="button" aria-label="Удалить"></button>
             <div className="element__description">
                 <h2 className="element__title">{card.name}</h2>
