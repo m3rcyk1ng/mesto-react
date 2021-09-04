@@ -18,25 +18,25 @@ export default class Api {
             .then(this._checkStatus);
     }
 
-    updateUserInfo(name, about) {
+    updateUserInfo(profile) {
         return fetch(`${this._link}/users/me`, {
             method: 'PATCH',
             headers: this._token,
             body: JSON.stringify({
-                name: name,
-                about: about
+                name: profile.name,
+                about: profile.about
             })
         })
             .then(this._checkStatus);
     }
 
-    addNewCard(name, link) {
+    addNewCard(card) {
         return fetch(`${this._link}/cards`, {
             method: 'POST',
-                headers: this._token,
+            headers: this._token,
             body: JSON.stringify({
-                name: name,
-                link: link
+                name: card.name,
+                link: card.link
             })
         })
             .then(this._checkStatus);
@@ -49,17 +49,9 @@ export default class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
     }
 
-    addLikeUpdate(cardId) {
+    changeLikeCardStatus(cardId, isLiked) {
         return fetch(`${this._link}/cards/likes/${cardId}`, {
-            method: 'PUT',
-            headers: this._token,
-        })
-            .then(this._checkStatus);
-    }
-
-    deleteLikeUpdate(cardId) {
-        return fetch(`${this._link}/cards/likes/${cardId}`, {
-            method: 'DELETE',
+            method: `${isLiked ? 'DELETE' : 'PUT'}`,
             headers: this._token,
         })
             .then(this._checkStatus);
@@ -77,9 +69,7 @@ export default class Api {
         return fetch(`${this._link}/users/me/avatar`, {
             method: 'PATCH',
             headers: this._token,
-            body: JSON.stringify({
-                avatar: avatar
-            })
+            body: JSON.stringify(avatar)
         })
             .then(this._checkStatus);
     }
