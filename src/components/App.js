@@ -4,7 +4,7 @@ import Header from './Header'
 import Main from './Main'
 import Footer from "./Footer";
 
-import {CurrentUserContext} from "./CurrentUserContext";
+import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import {api} from "../utils/Api";
 
 import ImagePopup from "./ImagePopup";
@@ -79,7 +79,7 @@ function App() {
     }
 
     function handlePopupClose(event) {
-        if (event.target.classList.contains('popup_open') || event.target.classList.contains('popup__button-close')) {
+        if (event.target === event.currentTarget) {
             closeAllPopups();
         }
     }
@@ -111,7 +111,8 @@ function App() {
         // Отправляем запрос в API и получаем обновлённые данные карточки
         api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
             setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        });
+        })
+        .catch((rej) => console.log(rej));
     }
 
     function handleCardDelete(card) {
@@ -123,8 +124,17 @@ function App() {
             .catch((rej) => console.log(rej));
     }
 
+    useEffect(() => {
+        const closeByEscape = (event) => {
+            if (event.key === 'Escape') {
+                closeAllPopups()
+            }
+        }
+        document.addEventListener('keyup', closeByEscape)
+        return () => document.removeEventListener('keyup', closeByEscape)
+    }, [selectedCard, isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen])
+
     return (
-        <>
             <CurrentUserContext.Provider value={currentUser}>
                 <Header/>
                 <Main cards={cards} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick}
@@ -139,7 +149,6 @@ function App() {
                                onAddPlace={handleAddPlaceSubmit}/>
                 <Footer/>
             </CurrentUserContext.Provider>
-        </>
     )
 }
 
